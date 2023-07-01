@@ -2,6 +2,7 @@ package Lexemes;
 
 import Enums.*;
 import Cash.*;
+import MyExceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class LexemeTextAnalyzer{
     public static Cash syntaxAnalyze(LexemeBuffer lexemes) {
         Lexeme lexeme = lexemes.next();
         if (lexeme.type == LexemeType.EOF) {
-            throw new RuntimeException("An empty or invalid string");
+            throw new InvalidStringException();
         } else {
             lexemes.back();
             return plusMinus(lexemes);
@@ -62,7 +63,7 @@ public class LexemeTextAnalyzer{
                     lexemes.back();
                     return value;
                 }
-                default -> throw new RuntimeException("Incorrect lexeme found");
+                default -> throw new IncorrectLexeme();
             }
         }
 
@@ -76,7 +77,7 @@ public class LexemeTextAnalyzer{
                 lexeme = lexemes.next();
 
                 if (lexeme.type != LexemeType.RIGHT_BRACKET)
-                    throw new RuntimeException("Closing bracket not found");
+                    throw new NoClosingBracketException();
 
                 return value;
             }
@@ -86,7 +87,7 @@ public class LexemeTextAnalyzer{
 
                 if (lexeme.type == LexemeType.RIGHT_BRACKET && value.getCurrency() == Currency.USD)
                     value = value.convertCurrency();
-                else throw new RuntimeException("Closing bracket not found");
+                else throw new NoClosingBracketException();
 
                 return value;
             }
@@ -96,11 +97,11 @@ public class LexemeTextAnalyzer{
 
                 if (lexeme.type == LexemeType.RIGHT_BRACKET && value.getCurrency() == Currency.RUB)
                     value = value.convertCurrency();
-                else throw new RuntimeException("Closing bracket not found");
+                else throw new NoClosingBracketException();
 
                 return value;
             }
-            default -> throw new RuntimeException("Incorrect lexeme found");
+            default -> throw new IncorrectLexeme();
         }
     }
 }

@@ -1,6 +1,7 @@
 package Cash;
 
 import Enums.Currency;
+import MyExceptions.*;
 
 import java.util.Properties;
 import java.io.FileInputStream;
@@ -40,19 +41,19 @@ public abstract class Cash {
             return new CashInUSD(definiteMoney);
         else if (checkedCash.charAt(checkedCash.length() - 1) == rubbleIdentifier)
             return new CashInRUB(definiteMoney);
-        else throw new RuntimeException("Currency selected incorrectly");
+        else throw new UnknownCurrencyException();
     }
 
     public void SumCash(Cash cash) {
         if(this.currency == cash.currency)
             this.amountOfMoney += cash.amountOfMoney;
-        else throw new RuntimeException("You can't stack different currencies");
+        else throw new DifferentCurrencyException();
     }
 
     public void MinusCash(Cash cash) {
         if(this.currency == cash.currency)
             this.amountOfMoney -= cash.amountOfMoney;
-        else throw new RuntimeException("You can't stack different currencies");
+        else throw new DifferentCurrencyException();
     }
 
     public abstract Cash convertCurrency();
